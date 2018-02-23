@@ -1,0 +1,65 @@
+﻿@using ClientDependency.Core.Mvc
+@using Escc.FindAddress.Mvc
+@model Escc.AddressAndPersonalDetails.BS7666Address
+
+<div class="find-address-container">
+
+    @Html.Hidden("Id", 0)
+    @Html.Hidden("Uprn", null)
+    @Html.Hidden("Usrn", null)
+    @Html.Hidden("GridEasting", 0)
+    @Html.Hidden("GridNorthing", 0)
+
+    @* Create the 'manual address' editor area that is shown when the manualAddress button is clicked or when an address is confirmed by the confirmAddress button *@
+    <div class="manual-address-area">
+        <div class="formPart">
+            @Html.LabelFor(m => m.Saon, "Flat number or firm", new { @class = "aural" })
+            @Html.TextBoxFor(m => m.Saon, new { @class = "saon", maxlength = 100 })
+        </div>
+        <div class="formPart">
+            @Html.LabelFor(m => m.Paon, "Building name or number", new { @class = "aural" })
+            @Html.TextBoxFor(m => m.Paon, new { @class = "paon", maxlength = 100 })
+        </div>
+        <div class="formPart">
+            @Html.LabelFor(m => m.StreetName, "Street name", new { @class = "aural" })
+            @Html.TextBoxFor(m => m.StreetName, new { @class = "street", maxlength = 100 })
+        </div>
+        <div class="formPart">
+            @Html.LabelFor(m => m.Locality, "Village or part of town", new { @class = "aural" })
+            @Html.TextBoxFor(m => m.Locality, new { @class = "locality", maxlength = 35 })
+        </div>
+        <div class="formPart">
+            @Html.LabelFor(m => m.Town, "Town")
+            @Html.TextBoxFor(m => m.Town, new { @class = "town", maxlength = 30 })
+        </div>
+        <div class="formPart">
+            @Html.LabelFor(m => m.AdministrativeArea, "County")
+            @Html.TextBoxFor(m => m.AdministrativeArea, new { @class = "administrative-area", maxlength = 30 })
+        </div>
+    </div>
+
+    <div class="formPart">
+        @Html.LabelFor(m => m.Postcode, "Postcode")
+        @Html.TextBoxFor(m => m.Postcode, new { @class = "postcode", maxlength = 8 })
+    </div>
+
+    @* Create the form buttons *@
+    <input type="button" value="Find address" data-button-url="@Url.Action("FindAddressClick", "FindAddress")" class="find-address" />
+    <span class="manual-button-area">&nbsp;or&nbsp;<input type="button" value="Type address" class="type-address" /></span>
+
+    @* Create the 'select address' area that is shown when the findAddress button is clicked with a valid postcode *@
+    @{
+        var guid = Guid.NewGuid().ToString();
+    }
+    <div class="formPart select-address-area">
+        <label for="addresses-@guid">Please select the correct address:</label>
+        <select id="addresses-@guid" size="4" class="possible-addresses listbox"></select>
+        <input type="button" value="Confirm address" class="confirm-address" data-button-url="@Url.Action("ConfirmAddressClick", "FindAddress")" />
+    </div>
+
+    @* Add validation summary span tag for address control to use locally *@
+    <span class="select-address-error validationSummary"></span>
+</div>
+@{
+    Html.RequiresJs("~/js/libs/find-address.js");
+}

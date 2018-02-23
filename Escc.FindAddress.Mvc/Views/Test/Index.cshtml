@@ -1,0 +1,33 @@
+﻿@using ClientDependency.Core.Mvc
+@model Escc.FindAddress.Mvc.Test.TestModel
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test page</title>
+</head>
+<body>
+@using (Html.BeginForm("SubmitTest", "Test", FormMethod.Post))
+{
+    @Html.ValidationSummary("", new { @class = "validationSummary" })
+
+    <fieldset class="formPart">
+        <legend>4. Address<span class="requiredField">*</span></legend>
+        @Html.Partial("_AddressForm", Model.Address1, new ViewDataDictionary()
+   {
+       TemplateInfo = new TemplateInfo() { HtmlFieldPrefix = "Address1" }
+   })
+    </fieldset>
+
+    <fieldset class="formPart">
+        <legend>5. Another Address<span class="requiredField">*</span></legend>
+        @Html.Partial("_AddressForm", Model.Address2, new ViewDataDictionary()
+   {
+       TemplateInfo = new TemplateInfo() { HtmlFieldPrefix = "Address2" }
+   })
+    </fieldset>
+    <input type="submit" value="Submit" />
+}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    @Html.RenderJsHere()
+</body>
+</html>
