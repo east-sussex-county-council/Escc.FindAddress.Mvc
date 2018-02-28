@@ -16,10 +16,10 @@
         }
 
         function SelectAddressErrorVisible(visible, context, message) {
-            if (visible == true) $('span.select-address-error', context).show();
-            else $('span.select-address-error', context).hide();
+            if (visible == true) $('p.select-address-error', context).show();
+            else $('p.select-address-error', context).hide();
 
-            $('span.select-address-error', context).text(message)
+            $('p.select-address-error', context).text(message)
         }
 
         function HasManualAddressData(context) {
@@ -35,11 +35,8 @@
             return !emptyManualAddressData;
         }
 
-        $("div.find-address-container").each(function () {
+        $("fieldset.find-address-container").each(function () {
             var findAddress = $(this);
-
-            $('input.find-address', findAddress).attr("style", "display: inline");
-            $('input.type-address', findAddress).attr("style", "display: inline");
 
             SetManualAddressAreaVisible(HasManualAddressData(findAddress), findAddress);
             SetSelectAddressAreaVisible(false, findAddress);

@@ -2,7 +2,9 @@
 @using Escc.FindAddress.Mvc
 @model Escc.AddressAndPersonalDetails.BS7666Address
 
-<div class="find-address-container">
+<fieldset class="formPart find-address-container">
+    @{ var config = ViewData.TemplateInfo as FindAddressConfiguration; }
+    <legend>@(config?.Label ?? "Address")@{ if (config != null && config.Required) { <span class="requiredField">*</span>} }</legend>
 
     @Html.Hidden("Id", 0)
     @Html.Hidden("Uprn", null)
@@ -44,8 +46,8 @@
     </div>
 
     @* Create the form buttons *@
-    <input type="button" value="Find address" data-button-url="@Url.Action("FindAddressClick", "FindAddress")" class="find-address" />
-    <span class="manual-button-area">&nbsp;or&nbsp;<input type="button" value="Type address" class="type-address" /></span>
+    <input type="button" value="Find address" data-button-url="@Url.Action("FindAddressClick", "FindAddress")" class="find-address button" />
+    <span class="manual-button-area">&nbsp;or&nbsp;<input type="button" value="Type address" class="type-address button" /></span>
 
     @* Create the 'select address' area that is shown when the findAddress button is clicked with a valid postcode *@
     @{
@@ -54,12 +56,12 @@
     <div class="formPart select-address-area">
         <label for="addresses-@guid">Please select the correct address:</label>
         <select id="addresses-@guid" size="4" class="possible-addresses listbox"></select>
-        <input type="button" value="Confirm address" class="confirm-address" data-button-url="@Url.Action("ConfirmAddressClick", "FindAddress")" />
+        <input type="button" value="Confirm address" class="confirm-address button" data-button-url="@Url.Action("ConfirmAddressClick", "FindAddress")" />
     </div>
 
-    @* Add validation summary span tag for address control to use locally *@
-    <span class="select-address-error validationSummary"></span>
-</div>
-@{
-    Html.RequiresJs("~/js/libs/find-address.js");
-}
+    @* Add validation for address control to use locally *@
+    <p class="select-address-error validationSummary"></p>
+</fieldset>
+    @{
+        Html.RequiresJs("~/js/libs/find-address.js");
+    }

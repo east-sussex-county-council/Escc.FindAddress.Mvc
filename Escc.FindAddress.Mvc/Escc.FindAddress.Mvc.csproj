@@ -43,6 +43,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Escc.FindAddress.Mvc.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClientDependency.Core, Version=1.8.2.1, Culture=neutral, processorArchitecture=MSIL">
@@ -108,6 +109,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="build-nuget.cmd" />
+    <Content Include="Escc.FindAddress.Mvc.nuspec" />
     <None Include="packages.config" />
     <Content Include="Global.asax" />
     <Content Include="Views\Web.config" />
@@ -118,13 +121,14 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <Content Include="Views\Shared\_AddressForm.cshtml" />
+    <Content Include="Views\Shared\_FindAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="js\libs\find-address.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FindAddressConfiguration.cs" />
     <Compile Include="FindAddressController.cs" />
     <Compile Include="Test\TestController.cs" />
     <Compile Include="Global.asax.cs">
@@ -132,7 +136,7 @@
     </Compile>
     <Compile Include="IAddressLookup.cs" />
     <Compile Include="LocateApiAddressResult.cs" />
-    <Compile Include="LocateApiPostcodeLookup.cs" />
+    <Compile Include="LocateApiAddressLookup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\TestModel.cs" />
   </ItemGroup>
@@ -169,6 +173,9 @@
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>if "$(ConfigurationName)"=="Release" "$(ProjectDir)build-nuget.cmd" $(ProjectDir)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

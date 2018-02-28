@@ -1,4 +1,5 @@
 ﻿@using ClientDependency.Core.Mvc
+@using Escc.FindAddress.Mvc
 @model Escc.FindAddress.Mvc.Test.TestModel
 <!DOCTYPE html>
 <html>
@@ -10,21 +11,20 @@
 {
     @Html.ValidationSummary("", new { @class = "validationSummary" })
 
-    <fieldset class="formPart">
-        <legend>4. Address<span class="requiredField">*</span></legend>
-        @Html.Partial("_AddressForm", Model.Address1, new ViewDataDictionary()
+        @Html.Partial("_FindAddress", Model.Address1, new ViewDataDictionary()
    {
-       TemplateInfo = new TemplateInfo() { HtmlFieldPrefix = "Address1" }
+       TemplateInfo = new FindAddressConfiguration()
+       {
+           HtmlFieldPrefix = "Address1",
+           Required = true,
+           Label = "4. Address"
+       }
    })
-    </fieldset>
 
-    <fieldset class="formPart">
-        <legend>5. Another Address<span class="requiredField">*</span></legend>
-        @Html.Partial("_AddressForm", Model.Address2, new ViewDataDictionary()
-   {
-       TemplateInfo = new TemplateInfo() { HtmlFieldPrefix = "Address2" }
-   })
-    </fieldset>
+        @Html.Partial("_FindAddress", Model.Address2, new ViewDataDictionary()
+    {
+        TemplateInfo = new TemplateInfo() { HtmlFieldPrefix = "Address2" }
+    })
     <input type="submit" value="Submit" />
 }
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
