@@ -13,6 +13,6 @@ namespace Escc.FindAddress.Mvc
         /// </summary>
         /// <param name="postcode">The postcode.</param>
         /// <returns></returns>
-        IList<AddressInfo> AddressesFromPostcode(string postcode);
+        IList<BS7666Address> AddressesFromPostcode(string postcode);
     }
 }

@@ -1,5 +1,8 @@
-﻿#if DEBUG 
+﻿// Build this file in debug only as it's for local testing, but we don't want it to be included in the NuGet package
+#if DEBUG
+using Escc.FindAddress.Mvc.Test;
 using System;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -18,6 +21,8 @@ namespace Escc.FindAddress.Mvc
                     action = "Index"
                 }
             );
+
+            GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }
 }

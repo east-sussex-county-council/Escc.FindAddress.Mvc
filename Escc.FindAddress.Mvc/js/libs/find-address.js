@@ -1,8 +1,9 @@
 ﻿if (typeof (jQuery) !== 'undefined') {
+    "use strict";
     jQuery(function ($) {
-        function SetManualAddressAreaVisible(visible, context) {
-            if (visible == true) $('div.manual-address-area', context).show();
-            else $('div.manual-address-area', context).hide();
+        function SetTypeAddressAreaVisible(visible, context) {
+            if (visible == true) $('div.type-address-area', context).show();
+            else $('div.type-address-area', context).hide();
         }
 
         function SetSelectAddressAreaVisible(visible, context) {
@@ -10,7 +11,7 @@
             else $('div.select-address-area', context).hide();
         }
 
-        function SetManualButtonAreaVisible(visible, context) {
+        function SetTypeButtonAreaVisible(visible, context) {
             if (visible == true) $('span.manual-button-area', context).show();
             else $('span.manual-button-area', context).hide();
         }
@@ -22,7 +23,7 @@
             $('p.select-address-error', context).text(message)
         }
 
-        function HasManualAddressData(context) {
+        function HasTypeAddressData(context) {
             var paon = $('input.paon', context).val();
             var saon = $('input.saon', context).val();
             var locality = $('input.locality', context).val();
@@ -30,30 +31,32 @@
             var town = $('input.town', context).val();
             var adminArea = $('input.administrative-area', context).val();
 
-            var emptyManualAddressData = paon == "" && saon == "" && locality == "" && streetName == "" && town == "" && adminArea == "";
+            var emptyTypeAddressData = paon == "" && saon == "" && locality == "" && streetName == "" && town == "" && adminArea == "";
 
-            return !emptyManualAddressData;
+            return !emptyTypeAddressData;
         }
 
+        // Set up each find address control on the page. There may be multiple, so always use the 'findAddress' object as the context when selecting.
         $("fieldset.find-address-container").each(function () {
             var findAddress = $(this);
 
-            SetManualAddressAreaVisible(HasManualAddressData(findAddress), findAddress);
+            SetTypeAddressAreaVisible(HasTypeAddressData(findAddress), findAddress);
             SetSelectAddressAreaVisible(false, findAddress);
-            SetManualButtonAreaVisible(true, findAddress);
+            SetTypeButtonAreaVisible(true, findAddress);
             SelectAddressErrorVisible(false, findAddress, '');
 
             $('input.find-address', findAddress).on('click', function () {
 
-                SetManualAddressAreaVisible(false, findAddress);
+                SetTypeAddressAreaVisible(false, findAddress);
                 SetSelectAddressAreaVisible(false, findAddress);
-                SetManualButtonAreaVisible(true, findAddress);
+                SetTypeButtonAreaVisible(true, findAddress);
                 SelectAddressErrorVisible(false, findAddress, '');
 
+                // Get the addresses that match the entered postcode using a web API
                 $.ajax({
                     url: $("input.find-address", findAddress).data("button-url"),
                     type: 'GET',
-                    data: { postCode: $('input.postcode', findAddress).val() },
+                    data: { postcode: $('input.postcode', findAddress).val() },
                     dataType: 'json',
                     cache: false,
                     success: function (response) {
@@ -82,42 +85,43 @@
                 });
             });
 
+            // Show the address fields if 'Type address' is clicked
             $('input.type-address', findAddress).on('click', function () {
-                SetManualAddressAreaVisible(true, findAddress);
+                SetTypeAddressAreaVisible(true, findAddress);
                 SetSelectAddressAreaVisible(false, findAddress);
-                SetManualButtonAreaVisible(false, findAddress);
+                SetTypeButtonAreaVisible(false, findAddress);
                 SelectAddressErrorVisible(false, findAddress, '');
             });
 
+            // If 'Confirm address' is clicked get the full details of the address and enter it into the fields
             $('input.confirm-address', findAddress).on('click', function () {
                 SelectAddressErrorVisible(false, findAddress, '');
 
                 $.ajax({
                     url: $('input.confirm-address', findAddress).data("button-url"),
                     type: 'GET',
-                    data: { postCode: $('input.postcode', findAddress).val(), uprn: $('select.possible-addresses option:selected', findAddress).val() },
+                    data: { postcode: $('input.postcode', findAddress).val(), uprn: $('select.possible-addresses option:selected', findAddress).val() },
                     dataType: 'json',
                     cache: false,
                     success: function (response) {
                         if (response != null && response.success) {
-                            SetManualAddressAreaVisible(true, findAddress);
+                            SetTypeAddressAreaVisible(true, findAddress);
                             SetSelectAddressAreaVisible(false, findAddress);
-                            SetManualButtonAreaVisible(false, findAddress);
+                            SetTypeButtonAreaVisible(false, findAddress);
 
                             if (response.data != null) {
-                                var bs7666Address = response.data['BS7666Address']
-                                $('input[name$="Id"]', findAddress).val(bs7666Address['Id']);
-                                $('input[name$="Uprn"]', findAddress).val(bs7666Address['Uprn']);
-                                $('input[name$="Usrn"]', findAddress).val(bs7666Address['Usrn']);
-                                $('input[name$="GridEasting"]', findAddress).val(bs7666Address['GridEasting']);
-                                $('input[name$="GridNorthing"]', findAddress).val(bs7666Address['GridNorthing']);
-                                $('input.paon', findAddress).val(bs7666Address['Paon']);
-                                $('input.saon', findAddress).val(bs7666Address['Saon']);
-                                $('input.locality', findAddress).val(bs7666Address['Locality']);
-                                $('input.street', findAddress).val(bs7666Address['StreetName']);
-                                $('input.town', findAddress).val(bs7666Address['Town']);
-                                $('input.administrative-area', findAddress).val(bs7666Address['AdministrativeArea']);
-                                $('input.postcode', findAddress).val(bs7666Address['Postcode']);
+                                var bs7666Address = response.data;
+                                $('input[name$="Uprn"]', findAddress).val(bs7666Address.Uprn).change();
+                                $('input[name$="Usrn"]', findAddress).val(bs7666Address.Usrn).change();
+                                $('input[name$="Latitude"]', findAddress).val(bs7666Address.GeoCoordinate ? bs7666Address.GeoCoordinate.Latitude : null).change();
+                                $('input[name$="Longitude"]', findAddress).val(bs7666Address.GeoCoordinate ? bs7666Address.GeoCoordinate.Longitude : null).change();
+                                $('input.paon', findAddress).val(bs7666Address.Paon).change();
+                                $('input.saon', findAddress).val(bs7666Address.Saon).change();
+                                $('input.locality', findAddress).val(bs7666Address.Locality).change();
+                                $('input.street', findAddress).val(bs7666Address.StreetName).change();
+                                $('input.town', findAddress).val(bs7666Address.Town).change();
+                                $('input.administrative-area', findAddress).val(bs7666Address.AdministrativeArea).change();
+                                $('input.postcode', findAddress).val(bs7666Address.Postcode).change();
                             }
                         } else {
                             SelectAddressErrorVisible(true, findAddress, response.responseText);

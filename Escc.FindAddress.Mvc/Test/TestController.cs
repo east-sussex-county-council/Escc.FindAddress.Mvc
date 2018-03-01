@@ -1,4 +1,5 @@
-﻿#if DEBUG
+﻿// Build this file in debug only as it's for local testing, but we don't want it to be included in the NuGet package
+#if DEBUG
 using System.Web.Mvc;
 
 namespace Escc.FindAddress.Mvc.Test

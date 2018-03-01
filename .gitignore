@@ -38,3 +38,4 @@ packages
 *.GhostDoc.xml
 App_Data
 .vs
+*.min.js

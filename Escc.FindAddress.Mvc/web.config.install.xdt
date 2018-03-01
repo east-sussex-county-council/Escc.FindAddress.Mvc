@@ -1,0 +1,11 @@
+﻿<?xml version="1.0"?>
+
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <appSettings xdt:Transform="Insert" />
+  <appSettings xdt:Transform="Remove" xdt:Locator="XPath(/configuration/appSettings[2])" />
+
+  <appSettings>
+    <add key="LocateApiAddressesUrl" value="" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
+    <add key="LocateApiToken" value="" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)" />
+  </appSettings>
+</configuration>

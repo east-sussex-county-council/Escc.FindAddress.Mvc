@@ -42,10 +42,10 @@ namespace Escc.FindAddress.Mvc
         /// <param name="postcode">The postcode.</param>
         /// <exception cref="WebException"></exception>
         /// <returns></returns>
-        public IList<AddressInfo> AddressesFromPostcode(string postcode)
+        public IList<BS7666Address> AddressesFromPostcode(string postcode)
         {
             var query = Regex.Replace(postcode, "[^A-Za-z0-9]", String.Empty);
-            if (String.IsNullOrEmpty(query)) return new List<AddressInfo>();
+            if (String.IsNullOrEmpty(query)) return new List<BS7666Address>();
 
             try
             {
@@ -63,18 +63,18 @@ namespace Escc.FindAddress.Mvc
                     {
                         var json = stream.ReadToEnd();
                         var results = JsonConvert.DeserializeObject<LocateApiAddressResult[]>(json);
-                        var addresses = new List<AddressInfo>();
+                        var addresses = new List<BS7666Address>();
                         foreach (var result in results)
                         {
-                            var address = new AddressInfo();
-                            address.BS7666Address = new BS7666Address(result.presentation.property, String.Empty, result.presentation.street, String.Empty, result.presentation.town, result.presentation.area, result.presentation.postcode)
+                            var address = new BS7666Address(result.presentation.property, String.Empty, result.presentation.street, String.Empty, result.presentation.town, result.presentation.area, result.presentation.postcode)
                             {
-                                Uprn = result.uprn
-                            };
-                            address.GeoCoordinate = new GeoCoordinate
-                            {
-                                Latitude = result.location.latitude,
-                                Longitude = result.location.longitude
+                                Uprn = result.uprn,
+                                Usrn = result.details?.usrn,
+                                GeoCoordinate = new GeoCoordinate()
+                                {
+                                    Latitude = result.location.latitude,
+                                    Longitude = result.location.longitude
+                                }
                             };
                             addresses.Add(address);
                         }
@@ -86,7 +86,7 @@ namespace Escc.FindAddress.Mvc
             {
                 if (exception.Message.Contains("(422) Unprocessable Entity"))
                 {
-                    return new List<AddressInfo>();
+                    return new List<BS7666Address>();
                 }
                 throw;
             }
