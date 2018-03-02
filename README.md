@@ -6,7 +6,7 @@ It can also be used by Umbraco Forms when wrapped by a custom field class - see 
 
 ## Using the field in a Razor view
 
-The `HtmlFieldPrefix` property should match the name of the address property on the model in order for MVC model binding to work. `ApiControllerUrl` is optional and defaults to the built-in Web API documented below.
+The `HtmlFieldPrefix` property should match the name of the address property on the model in order for MVC model binding to work. `ApiControllerUrl` is optional and defaults to the built-in Web API documented below. This can be useful when hosting the field in a virtual directory for example.
 
  	@Html.Partial("_FindAddress", Model.ExampleAddress, new ViewDataDictionary()
     {
@@ -15,7 +15,7 @@ The `HtmlFieldPrefix` property should match the name of the address property on 
 			Required = true, 
 			Label = "Address lookup",
 			Description = "This is optional and appears between the label and the postcode lookup field",
-			ApiControllerUrl = "https://www.example.org/api/SomeCustomApi"
+			ApiControllerUrl = new Uri(Url.Content("~/api/FindAddress/"), UriKind.Relative)
 		}
     })
 
