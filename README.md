@@ -8,6 +8,9 @@ It can also be used by Umbraco Forms when wrapped by a custom field class - see 
 
 The `HtmlFieldPrefix` property should match the name of the address property on the model in order for MVC model binding to work. `ApiControllerUrl` is optional and defaults to the built-in Web API documented below. This can be useful when hosting the field in a virtual directory for example.
 
+	@using Escc.FindAddress.Mvc
+	@using ClientDependency.Core.Mvc
+
  	@Html.Partial("_FindAddress", Model.ExampleAddress, new ViewDataDictionary()
     {
     	TemplateInfo = new FindAddressConfiguration() { 
@@ -18,6 +21,24 @@ The `HtmlFieldPrefix` property should match the name of the address property on 
 			ApiControllerUrl = new Uri(Url.Content("~/api/FindAddress/"), UriKind.Relative)
 		}
     })
+
+	@{ Html.RequiresJs("~/scripts/jquery-3.3.1.min.js", 10); }
+	@Html.RenderJsHere()
+
+JQuery is required but is not specified as a NuGet dependency so that your application has the flexibility to choose which version of jQuery to use. JQuery can be loaded using [ClientDependency](http://github.com/shazwazza/clientdependency) with a priority lower than `100` as shown here, or in whatever way best suits your application so long as it loads on the client before the scripts output by `@Html.RenderJsHere()`.
+
+### Validation
+
+The example code above specifies `Required = true`. This just causes an asterisk (*) to appear next to the field label. If you wish to validate the control you will need to create a model that inherits from `BS7666Address` and add validation attributes. For example, to require the `Paon` field:
+
+	using Escc.AddressAndPersonalDetails;
+	using System.ComponentModel.DataAnnotations;
+
+	public class BS7666AddressWithRequiredPaon : BS7666Address
+    {
+        [Required]
+        public new string Paon { get; set; }
+    }
 
 ## Required web service
 
