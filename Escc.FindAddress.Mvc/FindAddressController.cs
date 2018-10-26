@@ -1,5 +1,6 @@
 ﻿using Escc.AddressAndPersonalDetails;
 using Escc.Net;
+using Escc.Net.Configuration;
 using Exceptionless;
 using System;
 using System.Collections.Generic;
