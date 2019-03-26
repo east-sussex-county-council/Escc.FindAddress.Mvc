@@ -3,14 +3,14 @@
 @model Escc.AddressAndPersonalDetails.BS7666Address
 
 <fieldset class="formPart find-address-container">
-    @{
-    Html.RequiresJs("~/js/libs/find-address.min.js");
-    var config = ViewData.TemplateInfo as FindAddressConfiguration; // may be null if ViewData.TemplateInfo is an instance of System.Web.Mvc.TemplateInfo
+    @{ 
+        Html.RequiresJs("~/js/libs/find-address.min.js");
+        var config = ViewData.TemplateInfo as FindAddressConfiguration; // may be null if ViewData.TemplateInfo is an instance of System.Web.Mvc.TemplateInfo
     }
     <legend>@(config?.Label ?? "Address")@{ if (config != null && config.Required) { <span class="requiredField">*</span>} }</legend>
     @if (!String.IsNullOrEmpty(config?.Description))
     {
-    <p>@config.Description</p>
+        <p>@config.Description</p>
     }
 
     @* Create hidden fields for the additional metadata we get from the address lookup *@
