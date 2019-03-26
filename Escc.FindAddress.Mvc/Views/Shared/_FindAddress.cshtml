@@ -1,13 +1,14 @@
-﻿@using ClientDependency.Core.Mvc
+@using ClientDependency.Core.Mvc
 @using Escc.FindAddress.Mvc
 @model Escc.AddressAndPersonalDetails.BS7666Address
 
 <fieldset class="formPart find-address-container">
-    @{ 
+    @{
         Html.RequiresJs("~/js/libs/find-address.min.js");
         var config = ViewData.TemplateInfo as FindAddressConfiguration; // may be null if ViewData.TemplateInfo is an instance of System.Web.Mvc.TemplateInfo
     }
-    <legend>@(config?.Label ?? "Address")@{ if (config != null && config.Required) { <span class="requiredField">*</span>} }</legend>
+    <legend>@(config?.Label ?? "Address")@{ if (config != null && config.Required)
+        { <span class="requiredField">*</span>} }</legend>
     @if (!String.IsNullOrEmpty(config?.Description))
     {
         <p>@config.Description</p>
@@ -47,21 +48,33 @@
         </div>
     </div>
 
-    <div class="formPart">
-        @Html.LabelFor(m => m.Postcode, "Postcode")
-        @Html.TextBoxFor(m => m.Postcode, new { @class = "postcode", maxlength = 8 })
+
+    <div class="formPart readonly-address-area">
+        @Html.DisplayFor(m => m.Postcode)
+        @Html.HiddenFor(m => m.Postcode)
+        <input type="button" class="change-address button" value="Change address" />
+    </div>
+    
+    <div class="postcode-area">
+        <div class="formPart">
+            @Html.LabelFor(m => m.Postcode, "Postcode")
+            @Html.TextBoxFor(m => m.Postcode, new { @class = "postcode", maxlength = 8 })
+        </div>
     </div>
 
-    @* Create the form buttons *@
-    <input type="button" value="Find address" data-button-url="@(config?.ApiControllerUrl?.ToString() ?? "/api/FindAddress/")AddressesMatchingPostcode" class="find-address button" /><span class="manual-button-area">&nbsp;or&nbsp;<input type="button" value="Type address" class="type-address button" /></span>
+    <div id="find-address-controls">
+        @* Create the form buttons *@
+        <input type="button" value="Find address" data-button-url="@(config?.ApiControllerUrl?.ToString() ?? "/api/FindAddress/")AddressesMatchingPostcode" class="find-address button" /><span class="manual-button-area">&nbsp;or&nbsp;<input type="button" value="Type address" class="type-address button" /></span>
 
-    @* Create the 'select address' area that is shown when the findAddress button is clicked with a valid postcode *@
-    <div class="formPart select-address-area">
-        <label for="@(config?.HtmlFieldPrefix)-addresses">Please select the correct address:</label>
-        <select id="@(config?.HtmlFieldPrefix)-addresses" size="4" class="possible-addresses listbox"></select>
-        <input type="button" value="Confirm address" class="confirm-address button" data-button-url="@(config?.ApiControllerUrl?.ToString() ?? "/api/FindAddress/")AddressMatchingPostcodeAndUprn" />
+        @* Create the 'select address' area that is shown when the findAddress button is clicked with a valid postcode *@
+        <div class="formPart select-address-area">
+            <label for="@(config?.HtmlFieldPrefix)-addresses">Please select the correct address:</label>
+            <select id="@(config?.HtmlFieldPrefix)-addresses" size="4" class="possible-addresses listbox"></select>
+            <input type="button" value="Confirm address" class="confirm-address button" data-button-url="@(config?.ApiControllerUrl?.ToString() ?? "/api/FindAddress/")AddressMatchingPostcodeAndUprn" />
+        </div>
+
+        @* Add validation for address control to use locally *@
+        <p class="select-address-error validationSummary"></p>
     </div>
 
-    @* Add validation for address control to use locally *@
-    <p class="select-address-error validationSummary"></p>
-</fieldset>
+    </fieldset>
