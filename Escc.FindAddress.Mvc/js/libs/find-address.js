@@ -11,18 +11,18 @@ if (typeof (jQuery) !== 'undefined') {
             else $('div.select-address-area', context).hide();
         }
 
-        function SetTypeButtonAreaVisible(visible, context) {
-            if (visible == true) $('span.manual-button-area', context).show();
+        function SetTypeButtonAreaVisible(visible, context, hasOtherAddressFields) {
+            if (visible == true || hasOtherAddressFields == true) $('span.manual-button-area', context).show();
             else $('span.manual-button-area', context).hide();
         }
 
-        function SetPostCodeAreaVisible(visible, context) {
-            if (visible == true) $('div.postcode-area', context).show();
+        function SetPostCodeAreaVisible(visible, context, hasOtherAddressFields) {
+            if (visible == true || hasOtherAddressFields == true) $('div.postcode-area', context).show();
             else $('div.postcode-area', context).hide();
         }
 
-        function SetFindAddressButtonVisible(visible, context) {
-            if (visible == true) $('input.find-address', context).show();
+        function SetFindAddressButtonVisible(visible, context, hasOtherAddressFields) {
+            if (visible == true || hasOtherAddressFields == true) $('input.find-address', context).show();
             else $('input.find-address', context).hide();
         }
         
@@ -33,18 +33,18 @@ if (typeof (jQuery) !== 'undefined') {
             $('p.select-address-error', context).text(message)
         }
 
-        function EnablePostCodeInput(enable, context) {
-            if (enable == true) $('div.postcode-area input.postcode', context).removeAttr('disabled');
+        function EnablePostCodeInput(enable, context, hasOtherAddressFields) {
+            if (enable == true || hasOtherAddressFields == true) $('div.postcode-area input.postcode', context).removeAttr('disabled');
             else $('div.postcode-area input.postcode', context).attr('disabled', 'disabled');
         }
 
-        function EnableHiddenPostCode(enable, context) {
-            if (enable == true) $('div.readonly-address-area input[type="hidden"]', context).removeAttr('disabled');
+        function EnableHiddenPostCode(enable, context, hasOtherAddressFields) {
+            if (enable == true || hasOtherAddressFields == false) $('div.readonly-address-area input[type="hidden"]', context).removeAttr('disabled');
             else $('div.readonly-address-area input[type="hidden"]', context).attr('disabled', 'disabled');
         }
 
-        function SetReadonlyAddressAreaVisible(visible, context, message) {
-            if (visible == true) $('div.readonly-address-area', context).show();
+        function SetReadonlyAddressAreaVisible(visible, context, hasOtherAddressFields) {
+            if (visible == true && hasOtherAddressFields == false) $('div.readonly-address-area', context).show();
             else $('div.readonly-address-area', context).hide();
         }
 
@@ -77,13 +77,13 @@ if (typeof (jQuery) !== 'undefined') {
 
             SetTypeAddressAreaVisible(HasTypeAddressData(findAddress), findAddress);
             SetSelectAddressAreaVisible(false, findAddress);
-            SetTypeButtonAreaVisible(!HasPostCode(findAddress), findAddress);
+            SetTypeButtonAreaVisible(!HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));
             SelectAddressErrorVisible(false, findAddress, '');
-            SetPostCodeAreaVisible(!HasPostCode(findAddress), findAddress);
-            SetFindAddressButtonVisible(!HasPostCode(findAddress), findAddress);
-            SetReadonlyAddressAreaVisible(HasPostCode(findAddress), findAddress);
-            EnablePostCodeInput(!HasPostCode(findAddress), findAddress);
-            EnableHiddenPostCode(HasPostCode(findAddress), findAddress);
+            SetPostCodeAreaVisible(!HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));
+            SetFindAddressButtonVisible(!HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));          
+            SetReadonlyAddressAreaVisible(HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));
+            EnablePostCodeInput(!HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));
+            EnableHiddenPostCode(HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));
 
             $('input.find-address', findAddress).on('click', function () {
 
@@ -175,10 +175,10 @@ if (typeof (jQuery) !== 'undefined') {
 
             $('input.change-address', findAddress).on('click', function (e) {
                 e.preventDefault();
-                EnableHiddenPostCode(false, findAddress);
-                EnablePostCodeInput(true, findAddress);
+                EnableHiddenPostCode(false, findAddress, false);
+                EnablePostCodeInput(true, findAddress, true);
                 SetTypeButtonAreaVisible(true, findAddress);
-                SetPostCodeAreaVisible(true, findAddress);
+                SetPostCodeAreaVisible(true, findAddress, false);
                 SetFindAddressButtonVisible(true, findAddress);
                 SetReadonlyAddressAreaVisible(false, findAddress);
                 ResetPostCode(findAddress);
