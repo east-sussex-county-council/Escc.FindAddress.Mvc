@@ -11,8 +11,8 @@ if (typeof (jQuery) !== 'undefined') {
             else $('div.select-address-area', context).hide();
         }
 
-        function SetTypeButtonAreaVisible(visible, context, hasOtherAddressFields) {
-            if (visible == true || hasOtherAddressFields == true) $('span.manual-button-area', context).show();
+        function SetTypeButtonAreaVisible(visible, context) {
+            if (visible == true) $('span.manual-button-area', context).show();
             else $('span.manual-button-area', context).hide();
         }
 
@@ -77,7 +77,7 @@ if (typeof (jQuery) !== 'undefined') {
 
             SetTypeAddressAreaVisible(HasTypeAddressData(findAddress), findAddress);
             SetSelectAddressAreaVisible(false, findAddress);
-            SetTypeButtonAreaVisible(!HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));
+            SetTypeButtonAreaVisible(!HasTypeAddressData(findAddress), findAddress);
             SelectAddressErrorVisible(false, findAddress, '');
             SetPostCodeAreaVisible(!HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));
             SetFindAddressButtonVisible(!HasPostCode(findAddress), findAddress, HasTypeAddressData(findAddress));
